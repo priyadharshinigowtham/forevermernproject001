@@ -90,7 +90,7 @@ getCartAmount, navigate
  };
 
 return (
-<ShopContext.Provider value={value}>
+<ShopContext.Provider value={value}> 
 {props.children}
 </ShopContext.Provider>
 )
