@@ -1,5 +1,18 @@
-import cloudinary from "../config/cloudinary.js";   // ✅ FIXED
+import cloudinary from "../config/cloudinary.js";
 import productModel from "../models/productModel.js";
+
+const uploadToCloudinary = (buffer) =>
+  new Promise((resolve, reject) => {
+    cloudinary.uploader
+      .upload_stream(
+        { resource_type: "image", folder: "products" },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result.secure_url);
+        }
+      )
+      .end(buffer);
+  });
 
 // ADD PRODUCT
 const addProduct = async (req, res) => {
@@ -14,21 +27,19 @@ const addProduct = async (req, res) => {
       bestseller,
     } = req.body;
 
-    const image1 = req.files.image1 && req.files.image1[0];
-    const image2 = req.files.image2 && req.files.image2[0];
-    const image3 = req.files.image3 && req.files.image3[0];
-    const image4 = req.files.image4 && req.files.image4[0];
+    const image1 = req.files?.image1?.[0];
+    const image2 = req.files?.image2?.[0];
+    const image3 = req.files?.image3?.[0];
+    const image4 = req.files?.image4?.[0];
 
     const images = [image1, image2, image3, image4].filter(Boolean);
 
+    if (images.length === 0) {
+      return res.json({ success: false, message: "Image is required" });
+    }
+
     const imagesUrl = await Promise.all(
-      images.map(async (item) => {
-        const result = await cloudinary.uploader.upload(item.path, {
-          resource_type: "image",
-          folder: "products",
-        });
-        return result.secure_url;
-      })
+      images.map((img) => uploadToCloudinary(img.buffer))
     );
 
     const productData = {
