@@ -25,7 +25,7 @@ app.use('/api/product', productRouter)
 app.use('/api/cart', cartRouter)
 app.use('/api/order', orderRouter)
 
-// test route
+// health check
 app.get('/api/health', (req, res) => {
   res.json({ message: 'API Working' })
 })
