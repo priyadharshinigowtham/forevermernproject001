@@ -12,12 +12,12 @@ import orderRouter from './routes/orderRoute.js'
 
 const app = express()
 
-// DB connection
-connectDB()
-
 // middlewares
 app.use(express.json())
 app.use(cors())
+
+// DB connection
+connectDB()
 
 // routes (NO /api here)
 app.use('/user', userRouter)
@@ -25,7 +25,7 @@ app.use('/product', productRouter)
 app.use('/cart', cartRouter)
 app.use('/order', orderRouter)
 
-// health check (NO /api here)
+// health check
 app.get('/health', (req, res) => {
   res.json({ message: 'API Working' })
 })
