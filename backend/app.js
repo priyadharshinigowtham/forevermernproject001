@@ -19,14 +19,14 @@ connectDB()
 app.use(express.json())
 app.use(cors())
 
-// routes
-app.use('/api/user', userRouter)
-app.use('/api/product', productRouter)
-app.use('/api/cart', cartRouter)
-app.use('/api/order', orderRouter)
+// routes (NO /api here)
+app.use('/user', userRouter)
+app.use('/product', productRouter)
+app.use('/cart', cartRouter)
+app.use('/order', orderRouter)
 
-// health check
-app.get('/api/health', (req, res) => {
+// health check (NO /api here)
+app.get('/health', (req, res) => {
   res.json({ message: 'API Working' })
 })
 

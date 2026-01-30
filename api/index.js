@@ -1,10 +1,3 @@
-app.use('/user', userRouter)
-app.use('/product', productRouter)
-app.use('/cart', cartRouter)
-app.use('/order', orderRouter)
+import app from "../backend/app.js";
 
-app.get('/health', (req, res) => {
-  res.json({ message: 'API Working' })
-})
-
-
+export default app;
