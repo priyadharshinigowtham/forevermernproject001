@@ -14,9 +14,16 @@ const app = express();
 
 // middlewares
 app.use(express.json());
+const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
+
 app.use(
   cors({
-    origin: true, // Allow all origins (update with specific URLs after deployment)
+    origin: function (origin, callback) {
+      // allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      // Allow any origin for now (easier for deployment previews)
+      return callback(null, true);
+    },
     credentials: true,
   }),
 );
