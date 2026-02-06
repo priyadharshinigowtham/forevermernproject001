@@ -6,7 +6,7 @@ import {
   updateStatus,
 } from "../controllers/orderController.js";
 
-import adminAuth from "../middleware/AdminAuth.js";
+import adminAuth from "../middleware/adminAuth.js";
 import authUser from "../middleware/auth.js";
 
 const orderRouter = express.Router();
