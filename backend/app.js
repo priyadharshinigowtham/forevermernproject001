@@ -14,19 +14,31 @@ const app = express();
 
 // middlewares
 app.use(express.json());
-const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "https://forevermernproject001-essk-k5b047r2j.vercel.app", // Your specific Admin URL
+  "https://forevermernproject001-essk-k5b047r2j.vercel.app/",
+];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
-      // Allow any origin for now (easier for deployment previews)
+const corsOptions = {
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1 || true) {
+      // Temporarily allow ALL for debugging
       return callback(null, true);
-    },
-    credentials: true,
-  }),
-);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "token"],
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // Enable pre-flight for all routes
 
 // DB connection
 connectDB();
