@@ -12,36 +12,22 @@ import orderRouter from "./routes/orderRoute.js";
 
 const app = express();
 
-// 1. CORS Configuration (MUST BE FIRST)
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow ALL origins to resolve Vercel alias mismatches
-    return callback(null, true);
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: [
-    "Content-Type",
-    "Authorization",
-    "token",
-    "Origin",
-    "Accept",
-  ],
-};
-
-app.use(cors(corsOptions));
-
-// Explicitly handle pre-flight OPTIONS requests
+// 1. Unified CORS & Preflight Handler (MUST BE FIRST)
 app.use((req, res, next) => {
+  const origin = req.headers.origin;
+
+  // Allow any origin during debugging/deployment phase
+  res.header("Access-Control-Allow-Origin", origin || "*");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type,Authorization,token,Origin,Accept",
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
+
+  // Handle pre-flight
   if (req.method === "OPTIONS") {
-    res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
-    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-    res.header(
-      "Access-Control-Allow-Headers",
-      "Content-Type,Authorization,token,Origin,Accept",
-    );
-    res.header("Access-Control-Allow-Credentials", "true");
-    return res.status(200).json({});
+    return res.status(200).end();
   }
   next();
 });
