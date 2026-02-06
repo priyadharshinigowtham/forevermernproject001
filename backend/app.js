@@ -14,23 +14,11 @@ const app = express();
 
 // middlewares
 app.use(express.json());
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "https://forevermernproject001-essk-k5b047r2j.vercel.app", // Your specific Admin URL
-  "https://forevermernproject001-essk-k5b047r2j.vercel.app/",
-];
-
 const corsOptions = {
   origin: function (origin, callback) {
-    // allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1 || true) {
-      // Temporarily allow ALL for debugging
-      return callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
+    // Allow ALL origins to resolve Vercel alias mismatches
+    // This effectively disables CORS protection for debugging
+    return callback(null, true);
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
