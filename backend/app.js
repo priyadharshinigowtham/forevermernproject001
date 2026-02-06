@@ -35,4 +35,8 @@ app.get("/health", (req, res) => {
   res.json({ message: "API Working" });
 });
 
+app.get("/", (req, res) => {
+  res.send("API Working");
+});
+
 export default app;
