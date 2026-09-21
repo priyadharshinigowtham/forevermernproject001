@@ -27,6 +27,13 @@ const Sidebar = () => {
           <img className="size-5" src={assets.order_icon} />
           <p className="hidden md:block">Orders</p>
         </NavLink>
+        <NavLink
+          className={`flex items-center gap-3 border border-indigo-200 border-r-0 px-3 py-2 rounded-lg bg-indigo-50/40 text-indigo-900 font-medium`}
+          to="/forecast"
+        >
+          <span className="text-base">✨</span>
+          <p className="hidden md:block">AI Forecast</p>
+        </NavLink>
       </div>
     </div>
   );

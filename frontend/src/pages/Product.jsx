@@ -3,25 +3,32 @@ import { useParams } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext';
 import { assets } from '../assets/assets';
 import RelatedProducts from '../components/RelatedProducts';
+import AiRecommendations from '../components/AiRecommendations';
+import AiCompleteLook from '../components/AiCompleteLook';
+import { useAiPersonalization } from '../context/AiPersonalizationContext';
 
 const Product = () => {
 
   const { productId } = useParams();
   const { products, currency ,addToCart } = useContext(ShopContext);
+  const { trackInteraction } = useAiPersonalization();
   const [productData, setProductData] = useState(false);
   const [image, setImage] = useState('')
   const [size,setSize] = useState('')
 
   const fetchProductData = async () => {
-
-    products.map((item) => {
-      if (item._id === productId) {
-        setProductData(item)
-        setImage(item.image[0])
-        return null;
-      }
-    })
-
+    const item = products.find((item) => item._id === productId);
+    if (item) {
+      setProductData(item);
+      setImage(item.image[0]);
+      trackInteraction({
+        type: 'product_view',
+        category: item.category,
+        subCategory: item.subCategory,
+        productId: item._id,
+        price: item.price,
+      });
+    }
   }
 
   useEffect(() => {
@@ -89,6 +96,19 @@ const Product = () => {
           <p>E-commerce websites typically display products or services along with detailed descriptions, images, prices, and any available variations (e.g., sizes, colors). Each product usually has its own dedicated page with relevant information.</p>
         </div>
       </div>
+
+      {/* --------- AI Complete The Look & Bundle Section --------- */}
+      <AiCompleteLook currentProduct={productData} />
+
+      {/* --------- AI Smart Recommendations & Style Complements ---------- */}
+      <AiRecommendations 
+        productId={productData._id}
+        category={productData.category}
+        subCategory={productData.subCategory}
+        title="AI Style Pairings & Similar Fits"
+        subtitle={`Intelligent style recommendations matching this ${productData.subCategory || productData.category}`}
+        limit={4}
+      />
 
       {/* --------- display related products ---------- */}
 

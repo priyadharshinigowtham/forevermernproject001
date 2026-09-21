@@ -2,10 +2,12 @@ import React, { useContext, useState } from 'react'
 import {assets} from '../assets/assets'
 import { Link, NavLink } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext';
+import { useAiPersonalization } from '../context/AiPersonalizationContext';
 
 const Navbar = () => {
 
-    const [visible,setVisible] = useState(false);
+    const [visible, setVisible] = useState(false);
+    const { activePersona, setIsAiModalOpen } = useAiPersonalization();
 
     const {setShowSearch , getCartCount , navigate, token, setToken, setCartItems} = useContext(ShopContext);
 
@@ -51,7 +53,16 @@ const Navbar = () => {
 
       </ul>
 
-      <div className='flex items-center gap-6'>
+      <div className='flex items-center gap-4 sm:gap-5'>
+            {/* AI Style Pill */}
+            <button
+              onClick={() => setIsAiModalOpen(true)}
+              className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border border-gray-200 bg-gray-50 text-gray-800 hover:bg-gray-100 transition shadow-2xs cursor-pointer"
+            >
+              <span className="text-amber-500">✨</span>
+              <span className="truncate max-w-[110px]">{activePersona.name}</span>
+            </button>
+
             <img onClick={()=> { setShowSearch(true); navigate('/collection') }} src={assets.search_icon} className='w-5 cursor-pointer' alt="" />
             
             <div className='group relative'>

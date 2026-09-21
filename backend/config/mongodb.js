@@ -10,13 +10,22 @@ const connectDB = async () => {
     return;
   }
 
+  if (!process.env.MONGODB_URI) {
+    console.error("MONGODB_URI is not defined in .env file");
+    return;
+  }
+
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of default 30s
+      socketTimeoutMS: 45000,
+    });
+    
     isConnected = true;
-    console.log("DB Connected");
+    console.log(`DB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error("MongoDB error:", error.message);
-    // Don't exit process in serverless env
+    isConnected = false;
+    throw error; // Re-throw so app.js knows the connection failed
   }
 };
 

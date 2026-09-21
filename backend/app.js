@@ -9,6 +9,7 @@ import userRouter from "./routes/userRoute.js";
 import productRouter from "./routes/productRoute.js";
 import cartRouter from "./routes/cartRoute.js";
 import orderRouter from "./routes/orderRoute.js";
+import aiRouter from "./routes/aiRoute.js";
 
 const app = express();
 
@@ -36,13 +37,18 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 // DB connection
-connectDB();
+connectDB().then(() => {
+  console.log("Database Connected Successfully");
+}).catch((err) => {
+  console.error("Database Connection Failed:", err.message);
+});
 
 // routes
 app.use("/user", userRouter);
 app.use("/product", productRouter);
 app.use("/cart", cartRouter);
 app.use("/order", orderRouter);
+app.use("/ai", aiRouter);
 
 // health check
 app.get("/health", (req, res) => {
